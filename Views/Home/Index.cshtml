@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4" style="font-weight: bold">Welcome To Our Inventory Management System</h1>
+    <h4>Select what you would like to do...</h4>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center gap-4">
+            <div class="col-md-4 text-center p-4 border border-primary rounded shadow">
+                <a href="@Url.Action("Index", "Order")" class="btn btn-primary btn-lg">Make an Order</a>
+                <p class="description mt-3">For customer use. Add items to your orders. Head to check out to view total and confirm order.</p>
+            </div>
+
+            <div class="col-md-4 text-center p-4 border border-primary rounded shadow">
+                <a href="@Url.Action("Index", "Product")" class="btn btn-secondary btn-lg">Manage Products</a>
+                <p class="description mt-3">For admin use. View, edit, and organize your inventory of products.</p>
+            </div>
+        </div>
+    </div>
+
+    <img src="/images/boy-say-hi.webp" alt="Boy Saying Hi" class="img-fluid mt-4" />
+</div>

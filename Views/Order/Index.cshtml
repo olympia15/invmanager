@@ -1,0 +1,127 @@
+﻿@model List<invmanager.Models.Product>
+
+@{
+    Layout = "_Layout";
+    var customerName = TempData["CustomerName"] as string;
+    var customerEmail = TempData["CustomerEmail"] as string;
+}
+
+<div class="container py-4">
+    <h2 class="mb-4 text-center">🛒 Make An Order</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Customer Info Form -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <form id="customer-info-form" class="row g-3">
+                <div class="col-md-6">
+                    <label for="CustomerName" class="form-label">Customer Name</label>
+                    <input type="text" name="CustomerName" class="form-control" id="CustomerName" value="@customerName" required />
+                </div>
+                <div class="col-md-6">
+                    <label for="CustomerEmail" class="form-label">Customer Email</label>
+                    <input type="email" name="CustomerEmail" class="form-control" id="CustomerEmail" value="@customerEmail" required />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Product Table -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Product Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var product in Model)
+                            {
+                                <tr>
+                                    <td>@product.ProductId</td>
+                                    <td>@product.ProductName</td>
+                                    <td>@product.ProductCategory</td>
+                                    <td>@product.ProductPrice.ToString("C")</td>
+                                    <td>@product.Quantity</td>
+                                    <td>
+                                        @if (product.Quantity < product.Stock)
+                                        {
+                                            <span class="badge bg-danger">Low Stock</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">In Stock</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <form method="post" asp-action="AddToOrderConfirmed" class="d-flex align-items-center gap-2">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="CustomerName" class="hidden-customer-name" value="@customerName" />
+                                            <input type="hidden" name="CustomerEmail" class="hidden-customer-email" value="@customerEmail" />
+                                            <input type="hidden" name="ProductId" value="@product.ProductId" />
+                                            <input type="number" name="Quantity" min="1" max="@product.Quantity" value="1" class="form-control form-control-sm" style="width: 80px;" required />
+                                            <button type="submit" class="btn btn-warning btn-sm">Add To Order</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">No products available at this time.</p>
+            }
+        </div>
+    </div>
+
+    <!-- Order Summary Button -->
+    <div class="text-end mt-4">
+        <form method="get" action="/Order/SummaryOfOrder">
+            <input type="hidden" id="summaryCustomerName" name="CustomerName" value="@customerName" />
+            <input type="hidden" id="summaryCustomerEmail" name="CustomerEmail" value="@customerEmail" />
+            <button type="submit" class="btn btn-primary btn-lg">View Order Summary</button>
+        </form>
+    </div>
+</div>
+
+<!-- Sync customer info before submit -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const customerName = document.getElementById('CustomerName');
+        const customerEmail = document.getElementById('CustomerEmail');
+
+        document.querySelectorAll('form[method="post"]').forEach(function (form) {
+            form.addEventListener('submit', function () {
+                form.querySelector('.hidden-customer-name').value = customerName.value;
+                form.querySelector('.hidden-customer-email').value = customerEmail.value;
+            });
+        });
+
+        const summaryForm = document.querySelector('form[method="get"]');
+        if (summaryForm) {
+            summaryForm.addEventListener('submit', function () {
+                summaryForm.querySelector('#summaryCustomerName').value = customerName.value;
+                summaryForm.querySelector('#summaryCustomerEmail').value = customerEmail.value;
+            });
+        }
+    });
+</script>

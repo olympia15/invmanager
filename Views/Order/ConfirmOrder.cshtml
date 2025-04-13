@@ -1,0 +1,68 @@
+﻿@model invmanager.Models.Order
+
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Order Confirmation";
+}
+
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-success">✅ Order Confirmed</h2>
+        <h4 class="text-muted">Thank you for shopping with us, <span class="text-primary">@Model?.CustomerName</span>!</h4>
+    </div>
+
+    @if (Model == null)
+    {
+        <div class="alert alert-warning text-center">
+            No order details available.
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    Your order has been confirmed successfully!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Product Name</th>
+                                <th class="text-center">Quantity</th>
+                                <th class="text-end">Price</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var orderProduct in Model.OrderProducts)
+                            {
+                                <tr>
+                                    <td>@orderProduct.Product.ProductName</td>
+                                    <td class="text-center">@orderProduct.Quantity</td>
+                                    <td class="text-end">@orderProduct.Product.ProductPrice.ToString("C")</td>
+                                    <td class="text-end">@Math.Round(orderProduct.Quantity * orderProduct.Product.ProductPrice, 2).ToString("C")</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-light fw-bold">
+                                <td colspan="3" class="text-end">Grand Total</td>
+                                <td class="text-end">
+                                    @Math.Round(Model.OrderProducts.Sum(op => op.Quantity * op.Product.ProductPrice), 2).ToString("C")
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="text-end mt-4">
+                    <a href="@Url.Action("Index", "Order")" class="btn btn-outline-secondary">← Return to Products</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+

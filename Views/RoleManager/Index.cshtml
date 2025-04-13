@@ -1,0 +1,64 @@
+﻿@model List<Microsoft.AspNetCore.Identity.IdentityRole>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Role Management</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .role-list {
+            margin-top: 30px;
+        }
+        .role-card {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Role Management</h2>
+
+        <!-- Form to add a new role -->
+        <div class="card p-4 shadow-sm mb-4">
+            <h4 class="mb-3">Add a New Role</h4>
+            <form method="post" asp-action="AddRole">
+                <div class="mb-3">
+                    <label for="roleName" class="form-label">Select Role</label>
+                    <select id="roleName" name="roleName" class="form-select" required>
+                        <option value="Admin">Admin</option>
+                        <option value="User">Regular User</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Add Role</button>
+            </form>
+        </div>
+
+        <!-- Divider -->
+        <hr class="my-4">
+
+        <!-- Display roles -->
+        <div class="role-list">
+            <h4>Existing Roles</h4>
+            <div class="row">
+                @foreach (var role in Model)
+                {
+                    <div class="col-md-4">
+                        <div class="card role-card">
+                            <div class="card-body">
+                                <h5 class="card-title">@role.Name</h5>
+                                <p class="card-text">This role grants specific permissions within the application.</p>
+                                <a href="#" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

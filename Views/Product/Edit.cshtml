@@ -1,0 +1,76 @@
+﻿@model invmanager.Models.Product
+
+@{
+    ViewBag.Title = "Edit Product";
+    Layout = "_Layout";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold text-primary">@ViewBag.Title</h2>
+                    </div>
+
+                    <form asp-action="Edit" method="post">
+                        @Html.HiddenFor(model => model.ProductId)
+
+                        <div class="form-group">
+                            <label asp-for="ProductName" class="control-label">Product Name</label>
+                            <input asp-for="ProductName" class="form-control" />
+                            <span asp-validation-for="ProductName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="ProductCategory" class="control-label">Product Category</label>
+                            <select asp-for="ProductCategory" class="form-control">
+                                <option value="">-- Select Category --</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Clothing">Clothing</option>
+                                <option value="Books">Books</option>
+                                <option value="Toys">Toys</option>
+                                <option value="Furniture">Furniture</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <span asp-validation-for="ProductCategory" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="ProductPrice" class="control-label">Price</label>
+                            <input asp-for="ProductPrice" class="form-control" type="number" step="0.01" />
+                            <span asp-validation-for="ProductPrice" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Quantity" class="control-label">Quantity</label>
+                            <input asp-for="Quantity" class="form-control" type="number" />
+                            <span asp-validation-for="Quantity" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Stock" class="control-label">Stock Limit</label>
+                            <input asp-for="Stock" class="form-control" id="stockInput" />
+                            <span asp-validation-for="Stock" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <button type="submit" class="btn btn-success btn-block">Save Changes</button>
+                        </div>
+                    </form>
+
+                    <div class="mt-4 text-center">
+                        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

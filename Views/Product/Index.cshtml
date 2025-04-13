@@ -1,0 +1,90 @@
+﻿@model IEnumerable<Product>
+
+@{
+    ViewBag.Title = "Product List";
+    Layout = "_Layout";
+}
+
+<div class="container py-5">
+    <!-- Header Section -->
+    <div class="row justify-content-between align-items-center mb-4">
+        <div class="col-md-8">
+            <h2>@ViewBag.Title</h2>
+        </div>
+        <div class="col-md-4 text-md-right">
+            <a asp-action="Create" class="btn btn-primary">+ Create New Product</a>
+        </div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <form id="searchForm" class="mb-4">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="query">Search</label>
+                <input type="text" name="query" id="query" class="form-control" placeholder="Enter product name...">
+            </div>
+            <div class="col-md-4">
+                <label for="category">Category</label>
+                <select name="category" id="category" class="form-control">
+                    <option value="">All Categories</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Clothing">Clothing</option>
+                    <option value="Books">Books</option>
+                    <option value="Toys">Toys</option>
+                    <option value="Furniture">Furniture</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button type="button" id="searchButton" class="btn btn-primary btn-block mt-4">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <div id="loader" style="display: none; text-align: center;">
+        <img src="~/images/loading.gif" alt="Loading..." />
+    </div>
+
+    <div id="resultsContainer">
+        @* This is where results will be dynamically loaded *@
+    </div>
+
+    <!-- No products message -->
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info" role="alert">
+            No Products Available.
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="~/js/search.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#searchForm').click(function (evt) {
+                evt.preventDefault();
+                $('#loader').show();
+                var formData = {
+                    query: $('#query').val(),
+                    category: $('#category').val()
+                };
+
+                $.ajax({
+                    url: '/Product/SearchAndFilter',
+                    method: 'GET',
+                    data: formData,
+                    success: function (data) {
+                        $('#resultsContainer').html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching search results: ", error);
+                    },
+                    complete: function () {
+                        $('#loader').hide();
+                    }
+                });
+            });
+        });
+    </script>
+}

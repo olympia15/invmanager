@@ -1,0 +1,41 @@
+﻿@model IEnumerable<invmanager.Models.Order>
+
+<table class="table table-striped table-bordered align-middle">
+    <thead class="table-light">
+    <tr>
+        <th>Order ID</th>
+        <th>Product Name</th>
+        <th class="text-center">Quantity</th>
+        <th class="text-end">Order Total</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var order in Model)
+    {
+        foreach (var orderProduct in order.OrderProducts)
+        {
+            <tr>
+                <td>@order.OrderId</td>
+                <td>@orderProduct.Product.ProductName</td>
+                <td class="text-center">@orderProduct.Quantity</td>
+                <td class="text-end">
+                    @Math.Round(orderProduct.Quantity * orderProduct.Product.ProductPrice, 2).ToString("C")
+                </td>
+                <td class="text-center">
+                    <span class="badge @(order.Status == "InProgress" ? "bg-warning text-dark" : "bg-success")">
+                        @order.Status
+                    </span>
+                </td>
+                <td class="text-center">
+                    <button class="btn btn-sm btn-success confirm-order-btn"
+                            data-order-id="@order.OrderId">
+                        ✅ Confirm
+                    </button>
+                </td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>
